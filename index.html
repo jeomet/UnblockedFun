@@ -1,0 +1,563 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #020617;
+            background-image: linear-gradient(145deg, #020617 0%, #0c2044 50%, #020617 100%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+            touch-action: pan-y;
+        }
+
+        #main-menu {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            min-height: 100vh;
+            padding: 2rem;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .header h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00ffdd; /* Changed from cyan to white */
+            letter-spacing: -0.05em;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 5px rgba(255, 255, 255, 0.5); /* Changed shadow to white */
+        }
+        
+        #game-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .game-tile {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 9999px; /* This creates the pill shape */
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.2); /* Adjusted border for white theme */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+            padding: 1.25rem 2rem;
+        }
+        
+        .game-tile:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 35px -5px rgba(255, 255, 255, 0.3); /* Adjusted shadow for white theme */
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(30, 41, 59, 0.8);
+        }
+        
+        .game-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            color: #00ffdd; /* Changed from light cyan to white */
+        }
+
+        #game-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+        }
+        
+        #game-container {
+             width: 100%;
+             max-width: 1280px;
+             height: 90%; 
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             padding: 0;
+             border-radius: 1rem;
+             overflow:hidden;
+             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        #back-to-menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(30, 41, 59, 0.8);
+            color: #ffffff; /* Changed from cyan to white */
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Adjusted border for white theme */
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        #back-to-menu:hover {
+            transform: scale(1.05);
+            background: ##00ffdd; /* Changed hover background to white */
+            border-color: #ffffff; /* Changed hover border to white */
+            color: #00fff2; /* Changed hover text to dark blue */
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-menu">
+        <header class="header">
+            <h1>Games</h1>
+        </header>
+        <div id="game-grid">
+            <div id="play-btd5" class="game-tile">
+                <div class="game-title">Bloons TD 5</div>
+            </div>
+            <div id="play-stickman-hook" class="game-tile">
+                <div class="game-title">Stickman Hook</div>
+            </div>
+            <div id="play-slope" class="game-tile">
+                <div class="game-title">Slope</div>
+            </div>
+            <div id="play-basketball-stars" class="game-tile">
+                <div class="game-title">Basketball Stars</div>
+            </div>
+            <div id="play-moto-x3m" class="game-tile">
+                <div class="game-title">Moto X3M</div>
+            </div>
+            <div id="play-drive-mad" class="game-tile">
+                <div class="game-title">Drive Mad</div>
+            </div>
+            <div id="play-drift-boss" class="game-tile">
+                <div class="game-title">Drift Boss</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-wrapper" class="hidden">
+        <button id="back-to-menu">&larr; Back to Games</button>
+        <div id="game-container">
+            <!-- Game content will be injected here -->
+        </div>
+    </div>
+    
+    <script>
+        // --- BLOONS TD 5 --- //
+        const BloonsTD5Game = {
+            container: null,
+            start: function(container) {
+                this.container = container;
+                const gameHtml = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>BTD 5</title>
+                        <style>
+                            body, html {
+                                background-color: #6a859c;
+                                margin: 0;
+                                padding: 0;
+                                width: 100%;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <embed src="https://cdn.jsdelivr.net/gh/gagedevs/bloonstd5/btd5.swf" width="100%" height="100%">
+                        <script src="https://unpkg.com/@ruffle-rs/ruffle"><\/script>
+                    </body>
+                    </html>`;
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.setAttribute('srcdoc', gameHtml);
+                iframe.setAttribute('scrolling', 'no');
+                this.container.innerHTML = '';
+                this.container.appendChild(iframe);
+            },
+            stop: function() {
+                if (this.container) {
+                    this.container.innerHTML = '';
+                }
+            }
+        };
+
+        // --- STICKMAN HOOK --- //
+        const StickmanHookGame = {
+            container: null,
+            start: function(container) {
+                this.container = container;
+                const gameHtml = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <base href="https://cdn.jsdelivr.net/gh/genizy/google-class@cd06df26d3c4d9f73c8151fc13f7b2dc27f3adda/stickman-hook/">
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+                        <style>
+                        html,
+                        body {
+                            position: absolute;
+                            top: 0px;
+                            left: 0px;
+                            margin: 0;
+                            padding: 0;
+                            border: 0;
+                            overflow: hidden;
+                            width: 100vw;
+                            height: 100vh;
+                        }
+                        canvas {
+                            width: 100%;
+                        }
+                        </style>
+                        <script src="poki3.js"><\/script>
+                    </head>
+                    <body>
+                        <script src="bundle.js"><\/script>
+                    </body>
+                    </html>`;
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.setAttribute('srcdoc', gameHtml);
+                iframe.setAttribute('scrolling', 'no');
+                this.container.innerHTML = '';
+                this.container.appendChild(iframe);
+            },
+            stop: function() {
+                if (this.container) {
+                    this.container.innerHTML = '';
+                }
+            }
+        };
+
+        // --- SLOPE --- //
+        const SlopeGame = {
+            container: null,
+            start: function(container) {
+                this.container = container;
+                const slopeHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Slope</title>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/scheng123321/tmm-html5-cdn1@51a72f0faa2d9cd524a0c11b4ca368350f988458/slope/TemplateData/style.css" />
+                    <style>
+                        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+                        .webgl-content { width: 100% !important; height: 100% !important; }
+                    </style>
+                </head>
+                <body>
+                    <div class="webgl-content">
+                        <div id="gameContainer" style="width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; position: relative; background: rgb(35, 31, 32);">
+                        </div>
+                    </div>
+                    <script src="https://cdn.jsdelivr.net/gh/scheng123321/tmm-html5-cdn1@51a72f0faa2d9cd524a0c11b4ca368350f988458/slope/TemplateData/UnityProgress.js"><\/script>
+                    <script src="https://cdn.jsdelivr.net/gh/scheng123321/tmm-html5-cdn1@51a72f0faa2d9cd524a0c11b4ca368350f988458/slope/TemplateData/unityloader41.js"><\/script>
+                    <script>
+                      var gameInstance = UnityLoader.instantiate(
+                        "gameContainer",
+                        "https://cdn.jsdelivr.net/gh/scheng123321/tmm-html5-cdn1@51a72f0faa2d9cd524a0c11b4ca368350f988458/slope/Build/slope.json",
+                        { onProgress: UnityProgress }
+                      );
+                    <\/script>
+                </body>
+                </html>`;
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.setAttribute('srcdoc', slopeHtml);
+                iframe.setAttribute('scrolling', 'no');
+                this.container.innerHTML = '';
+                this.container.appendChild(iframe);
+            },
+            stop: function() {
+                if (this.container) {
+                    this.container.innerHTML = '';
+                }
+            }
+        };
+
+        // --- BASKETBALL STARS --- //
+        const BasketballStarsGame = {
+            container: null,
+            start: function(container) {
+                this.container = container;
+                const gameHtml = `
+                    <!DOCTYPE html>
+                    <html lang="en" >
+                    <head>
+                        <meta charset="utf-8" />
+                        <meta http-equiv="x-ua-compatible" content="ie=edge" >
+                        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/basketball-stars/assets/css/app.css" type="text/css" />
+                        <title>Basketball Stars</title>
+                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+                        <style> body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; } </style>
+                    </head>
+                    <body>
+                        <div id="content"></div>
+                        <div id="orientation"></div>
+                        <div id="loader">Loading ...</div>
+                        <script type="text/javascript" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/basketball-stars/assets/box2dweb/nape.min.js" ><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/basketball-stars/assets/box2dweb/nape-debug-draw.min.js" ><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/basketball-stars/assets/box2dweb/jquery-3.1.1.min.js" ><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/basketball-stars/assets/box2dweb/easeljs-0.8.2.combined.js" ><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/basketball-stars/assets/box2dweb/bluebird.min.js" ><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bobydob/JSEngine@8fbc9ed4a32c499529f5274425c33001f7726887/build/bs/bs.min.js" ><\/script>
+                    </body>
+                    </html>`;
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.setAttribute('srcdoc', gameHtml);
+                iframe.setAttribute('scrolling', 'no');
+                this.container.innerHTML = '';
+                this.container.appendChild(iframe);
+            },
+            stop: function() {
+                if (this.container) {
+                    this.container.innerHTML = '';
+                }
+            }
+        };
+
+        // --- MOTO X3M --- //
+        const MotoX3MGame = {
+            container: null,
+            start: function(container) {
+                this.container = container;
+                const motoX3MHtml = `
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="utf-8" />
+                        <meta http-equiv="x-ua-compatible" content="ie=edge">
+                        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Rabbibo/moto@35b09901c725d990145f7b305cbcb42ddcee4782/assets/css/app.css" type="text/css" />
+                        <style>
+                            body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+                        </style>
+                    </head>
+                    <body>
+                        <div id="content"></div>
+                        <div id="orientation"></div>
+                        <div id="loader">Loading ...</div>
+                        <script type="text/javascript" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/motox3m/assets/lib/nape.min.js"><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/motox3m/assets/lib/jquery-3.1.1.min.js"><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/motox3m/assets/lib/easeljs-0.8.2.combined.js"><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Stypical/lacklack@0959ed15fc96078cbb053e4e3c259a62b3e9e296/motox3m/assets/lib/bluebird.min.js"><\/script>
+                        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bobydob/JSEngine@0e96212fb7b2e7aa0a310d3ebe3a8ab01a114b4b/build/m3m/m3m.min.js"><\/script>
+                        <script src="https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/addc4348-16c2-4645-9dff-f99b962e39ef%2Fscr.js"><\/script>
+                    </body>
+                    </html>
+                `;
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.setAttribute('srcdoc', motoX3MHtml);
+                iframe.setAttribute('scrolling', 'no');
+                this.container.innerHTML = '';
+                this.container.appendChild(iframe);
+            },
+            stop: function() {
+                if(this.container) {
+                    this.container.innerHTML = '';
+                }
+            }
+        };
+
+        // --- DRIVE MAD --- //
+        const DriveMadGame = {
+            container: null,
+            start: function(container) {
+                this.container = container;
+                const iframe = document.createElement('iframe');
+                iframe.src = "https://ubg77.github.io/game131022/drive-mad/";
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                this.container.innerHTML = '';
+                this.container.appendChild(iframe);
+            },
+            stop: function() {
+                if(this.container) {
+                    this.container.innerHTML = '';
+                }
+            }
+        };
+
+        // --- DRIFT BOSS --- //
+        const DriftBossGame = {
+            container: null,
+            
+            start: function(container) {
+                this.container = container;
+                
+                const driftBossHtml = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Drift Boss</title>
+                        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+                        <meta name="robots" content="noindex, nofollow">
+                        <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui" />
+                        <meta name="apple-mobile-web-app-capable" content="yes">
+                        <link rel="stylesheet" type="text/css" href="https://738501629-461082748261058427.preview.editmysite.com/uploads/b/139890129-817510652323129407/files/game.css">
+                        <script type="text/javascript" src="https://738501629-461082748261058427.preview.editmysite.com/uploads/b/139890129-817510652323129407/files/game.js"><\/script>
+                        <style>
+                            body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #000; }
+                            #ajaxbar { height: 100% !important; width: 100% !important; }
+                        </style>
+                    </head>
+                    <body onload="setTimeout(function(){window.scrollTo(0,1)},1);">
+                        <div id="ajaxbar">
+                            <div id="game"><canvas id="canvas"></canvas></div>
+                            <div id="webgl"><canvas id="webglcanvas"></canvas></div>
+                            <div id="orientate"><img src="https://738501629-461082748261058427.preview.editmysite.com/uploads/b/139890129-817510652323129407/files/media/graphics/orientate/landscape.jpg"></div>
+                            <div id="play" class="play" onclick=""><img src="https://738501629-461082748261058427.preview.editmysite.com/uploads/b/139890129-817510652323129407/files/media/graphics/splash/mobile/cover-start.jpg"></div>
+                        </div>
+                    </body>
+                    </html>
+                `;
+
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.setAttribute('srcdoc', driftBossHtml);
+                iframe.setAttribute('scrolling', 'no');
+                this.container.innerHTML = '';
+                this.container.appendChild(iframe);
+            },
+
+            stop: function() {
+                if (this.container) {
+                    this.container.innerHTML = '';
+                }
+            }
+        };
+
+        // --- MAIN ARCADE CONTROLLER --- //
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainMenu = document.getElementById('main-menu');
+            const gameWrapper = document.getElementById('game-wrapper');
+            const gameContainer = document.getElementById('game-container');
+            
+            const playBloonsBtn = document.getElementById('play-btd5');
+            const playStickmanHookBtn = document.getElementById('play-stickman-hook');
+            const playSlopeBtn = document.getElementById('play-slope');
+            const playBasketballStarsBtn = document.getElementById('play-basketball-stars');
+            const playMotoX3MBtn = document.getElementById('play-moto-x3m');
+            const playDriveMadBtn = document.getElementById('play-drive-mad');
+            const playDriftBossBtn = document.getElementById('play-drift-boss');
+            const backToMenuBtn = document.getElementById('back-to-menu');
+            
+            let currentGame = null;
+
+            function switchToGameView() {
+                mainMenu.classList.add('hidden');
+                gameWrapper.classList.remove('hidden');
+            }
+
+            function switchToMenuView() {
+                if (currentGame) {
+                    currentGame.stop();
+                    currentGame = null;
+                }
+                gameContainer.innerHTML = ''; // Clear container
+                mainMenu.classList.remove('hidden');
+                gameWrapper.classList.add('hidden');
+            }
+
+            playBloonsBtn.addEventListener('click', () => {
+                switchToGameView();
+                currentGame = BloonsTD5Game;
+                BloonsTD5Game.start(gameContainer);
+            });
+
+            playStickmanHookBtn.addEventListener('click', () => {
+                switchToGameView();
+                currentGame = StickmanHookGame;
+                StickmanHookGame.start(gameContainer);
+            });
+
+            playSlopeBtn.addEventListener('click', () => {
+                switchToGameView();
+                currentGame = SlopeGame;
+                SlopeGame.start(gameContainer);
+            });
+
+            playBasketballStarsBtn.addEventListener('click', () => {
+                switchToGameView();
+                currentGame = BasketballStarsGame;
+                BasketballStarsGame.start(gameContainer);
+            });
+
+            playMotoX3MBtn.addEventListener('click', () => {
+                switchToGameView();
+                currentGame = MotoX3MGame;
+                MotoX3MGame.start(gameContainer);
+            });
+            
+            playDriveMadBtn.addEventListener('click', () => {
+                switchToGameView();
+                currentGame = DriveMadGame;
+                DriveMadGame.start(gameContainer);
+            });
+            
+            playDriftBossBtn.addEventListener('click', () => {
+                switchToGameView();
+                currentGame = DriftBossGame;
+                DriftBossGame.start(gameContainer);
+            });
+
+            backToMenuBtn.addEventListener('click', switchToMenuView);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
